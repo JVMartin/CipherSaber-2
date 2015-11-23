@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define ROUNDS 20
+#define ROUNDS 10
 
 int checkCommand(int argc, char ** argv);
 void initState(unsigned char * state, unsigned char * key, int keyLength);
@@ -108,6 +108,8 @@ void decrypt(unsigned char * state, char * key,
 	initState(state, appendedKey, keyLength + 10);
 
 	cipher(state, data + 10, dataSize - 10);
+
+	printf("%s\n", data + 10);
 
 	free(data);
 	free(appendedKey);
