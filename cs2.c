@@ -5,7 +5,7 @@
 #define ROUNDS 20
 
 int checkCommand(int argc, char ** argv);
-void initState(unsigned char * state, char * key);
+void initState(unsigned char * state, unsigned char * key, int keyLength);
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
 char * getFileContents(char * path);
@@ -53,16 +53,19 @@ int checkCommand(int argc, char ** argv)
 		strcmp(argv[1], "decrypt") != 0) {
 		return 0;
 	}
+
+	if (strlen(argv[2]) > 246) {
+		printf("That key is too long.\n");
+		return 0;
+	}
 	
 	return 1;
 }
 
-void initState(unsigned char * state, char * key)
+void initState(unsigned char * state, unsigned char * key, int keyLength)
 {
 	unsigned char c;
-	int i, j, n, keyLength;
-
-	keyLength = strlen(key);
+	int i, j, n;
 
 	// Initialize the state array.
 	for (i = 0; i < 255; ++i) {
@@ -89,10 +92,31 @@ void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath)
 {
 	FILE * destFile;
+	char * data;
+	unsigned char * appendedKey;
+	int keyLength;
+	int i;
 
-	char * contents = getFileContents(srcPath);
-	printf("%s\n", contents);
-	free(contents);
+	data = getFileContents(srcPath);
+
+	printf("Key: %s\n", key);
+	keyLength = strlen(key);
+	for (i = 0; i < keyLength; ++i) {
+		printf("%d: %d\n", i, key[i]);
+	}
+	appendedKey = malloc(keyLength + 11);
+	memcpy(appendedKey, key, keyLength);
+	memcpy(appendedKey + keyLength, data, 10);
+	appendedKey[keyLength + 9] = '\0';
+	printf("Key: %s\n", appendedKey);
+	for (i = 0; i < keyLength + 10; ++i) {
+		printf("%d: %d\n", i, appendedKey[i]);
+	}
+
+	initState(state, appendedKey, keyLength + 10);
+
+	free(data);
+	free(appendedKey);
 }
 
 char * getFileContents(char * path)
