@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2015 Jacob Martin
+ *
+ * CipherSaber-2 file encryption/decryption.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
