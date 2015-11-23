@@ -139,7 +139,7 @@ void decrypt(unsigned char * state, char * key,
 	cipher(state, data + 10, dataLength - 10);
 
 	printf("%s\n", data + 10);
-	stringToFile(data + 10, destPath);
+	stringToFile((char *) data + 10, destPath);
 
 	free(data);
 	free(appendedKey);
@@ -191,6 +191,7 @@ int stringToFile(char * string, char * path)
 	}
 
 	fputs(string, file);
+	fputs("\n", file);
 	fclose(file);
 	return 1;
 }
