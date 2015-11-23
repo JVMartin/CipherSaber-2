@@ -8,7 +8,8 @@ int checkCommand(int argc, char ** argv);
 void initState(unsigned char * state, unsigned char * key, int keyLength);
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
-char * getFileContents(char * path);
+void cipher(unsigned char * state, unsigned char * data, int length);
+char * getFileContents(char * path, int * fileSize);
 //void decrypt();
 
 int main(int argc, char ** argv)
@@ -95,34 +96,57 @@ void decrypt(unsigned char * state, char * key,
 	char * data;
 	unsigned char * appendedKey;
 	int keyLength;
+	int dataSize;
 	int i;
 
-	data = getFileContents(srcPath);
-
-	printf("Key: %s\n", key);
+	data = getFileContents(srcPath, &dataSize);
 	keyLength = strlen(key);
+	/*
 	for (i = 0; i < keyLength; ++i) {
 		printf("%d: %d\n", i, key[i]);
 	}
+	*/
 	appendedKey = malloc(keyLength + 11);
 	memcpy(appendedKey, key, keyLength);
 	memcpy(appendedKey + keyLength, data, 10);
 	appendedKey[keyLength + 9] = '\0';
+	/*
 	printf("Key: %s\n", appendedKey);
 	for (i = 0; i < keyLength + 10; ++i) {
 		printf("%d: %d\n", i, appendedKey[i]);
 	}
+	*/
 
 	initState(state, appendedKey, keyLength + 10);
+
+	cipher(state, data, dataSize);
+	printf("%s\n", data);
 
 	free(data);
 	free(appendedKey);
 }
 
-char * getFileContents(char * path)
+void cipher(unsigned char * state, unsigned char * data, int length)
+{
+	int i, j, k, n;
+	unsigned char c;
+
+	i = j = 0;
+
+	for (n = 0; n < length; ++n) {
+		i = (i + 1) % 256;
+		j = (j + state[i]) % 256;
+		c = state[i];
+		state[i] = state[j];
+		state[j] = c;
+		k = (state[i] + state[j]) % 256;
+		data[n] = data[n] ^ state[k];
+	}
+}
+
+char * getFileContents(char * path, int * fileSize)
 {
 	FILE * file;
-	int fileSize;
 	char * data;
 
 	file = fopen(path, "r");
@@ -132,18 +156,18 @@ char * getFileContents(char * path)
 	}
 
 	fseek(file, 0L, SEEK_END);
-	fileSize = ftell(file);
+	*fileSize = ftell(file);
 	rewind(file);
 
-	printf("File size: %d bytes.\n", fileSize);
+	printf("File size: %d bytes.\n", *fileSize);
 
-	data = malloc(fileSize);
+	data = malloc(*fileSize);
 	if ( ! data) {
 		printf("Could not allocate enough memory.\n");
 		return;
 	}
 
-	fread(data, fileSize, 1, file);
+	fread(data, *fileSize, 1, file);
 	fclose(file);
 	return data;
 }
