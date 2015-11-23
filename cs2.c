@@ -9,7 +9,7 @@ void initState(unsigned char * state, unsigned char * key, int keyLength);
 void cipher(unsigned char * state, unsigned char * data, int length);
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
-unsigned char * getFileContents(char * path, int * fileSize);
+unsigned char * fileToString(char * path, int * stringLength);
 
 int main(int argc, char ** argv)
 {
@@ -123,9 +123,9 @@ void decrypt(unsigned char * state, char * key,
 	unsigned char * data;
 	unsigned char * appendedKey;
 	int keyLength;
-	int dataSize;
+	int dataLength;
 
-	data = getFileContents(srcPath, &dataSize);
+	data = fileToString(srcPath, &dataLength);
 	if ( ! data) return;
 	keyLength = strlen(key);
 
@@ -135,7 +135,7 @@ void decrypt(unsigned char * state, char * key,
 
 	initState(state, appendedKey, keyLength + 10);
 
-	cipher(state, data + 10, dataSize - 10);
+	cipher(state, data + 10, dataLength - 10);
 
 	printf("%s\n", data + 10);
 
@@ -146,7 +146,7 @@ void decrypt(unsigned char * state, char * key,
 /**
  * Get the contents of a file into an array of chars.
  */
-unsigned char * getFileContents(char * path, int * fileSize)
+unsigned char * fileToString(char * path, int * stringLength)
 {
 	FILE * file;
 	unsigned char * data;
@@ -158,17 +158,19 @@ unsigned char * getFileContents(char * path, int * fileSize)
 	}
 
 	fseek(file, 0L, SEEK_END);
-	*fileSize = ftell(file);
+	*stringLength = ftell(file);
 	rewind(file);
 
-	data = malloc(*fileSize + 1);
+	data = malloc(*stringLength + 1);
 	if ( ! data) {
 		printf("Could not allocate enough memory.\n");
 		return 0;
 	}
-	data[*fileSize] = 0;
 
-	fread(data, *fileSize, 1, file);
+	// Null terminate the string.
+	data[*stringLength] = 0;
+
+	fread(data, *stringLength, 1, file);
 	fclose(file);
 	return data;
 }
