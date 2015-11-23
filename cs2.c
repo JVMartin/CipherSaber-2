@@ -9,7 +9,7 @@ void initState(unsigned char * state, unsigned char * key, int keyLength);
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
 void cipher(unsigned char * state, unsigned char * data, int length);
-char * getFileContents(char * path, int * fileSize);
+unsigned char * getFileContents(char * path, int * fileSize);
 //void decrypt();
 
 int main(int argc, char ** argv)
@@ -92,14 +92,13 @@ void initState(unsigned char * state, unsigned char * key, int keyLength)
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath)
 {
-	FILE * destFile;
-	char * data;
+	unsigned char * data;
 	unsigned char * appendedKey;
 	int keyLength;
 	int dataSize;
-	int i;
 
 	data = getFileContents(srcPath, &dataSize);
+	if ( ! data) return;
 	keyLength = strlen(key);
 	/*
 	for (i = 0; i < keyLength; ++i) {
@@ -144,27 +143,25 @@ void cipher(unsigned char * state, unsigned char * data, int length)
 	}
 }
 
-char * getFileContents(char * path, int * fileSize)
+unsigned char * getFileContents(char * path, int * fileSize)
 {
 	FILE * file;
-	char * data;
+	unsigned char * data;
 
 	file = fopen(path, "r");
 	if ( ! file) {
 		printf("Could not open file: %s\n", path);
-		return;
+		return 0;
 	}
 
 	fseek(file, 0L, SEEK_END);
 	*fileSize = ftell(file);
 	rewind(file);
 
-	printf("File size: %d bytes.\n", *fileSize);
-
 	data = malloc(*fileSize);
 	if ( ! data) {
 		printf("Could not allocate enough memory.\n");
-		return;
+		return 0;
 	}
 
 	fread(data, *fileSize, 1, file);
