@@ -10,7 +10,6 @@ void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
 void cipher(unsigned char * state, unsigned char * data, int length);
 unsigned char * getFileContents(char * path, int * fileSize);
-//void decrypt();
 
 int main(int argc, char ** argv)
 {
@@ -24,8 +23,8 @@ int main(int argc, char ** argv)
 	unsigned char * state;
 	char * key;
 
-	state = (unsigned char *) malloc(256);
-	key   = (char *)          malloc(256);
+	state = malloc(256);
+	key   = malloc(256);
 
 	// Grab the key from the argument.
 	strcpy(key, argv[2]);
@@ -125,11 +124,14 @@ void cipher(unsigned char * state, unsigned char * data, int length)
 	for (n = 0; n < length; ++n) {
 		i = (i + 1) % 256;
 		j = (j + state[i]) % 256;
+
+		// Swap the ith and jth elements of the state array.
 		c = state[i];
 		state[i] = state[j];
 		state[j] = c;
+
 		k = (state[i] + state[j]) % 256;
-		data[n] = data[n] ^ state[k];
+		data[n] ^= state[k];
 	}
 }
 
@@ -148,7 +150,7 @@ unsigned char * getFileContents(char * path, int * fileSize)
 	*fileSize = ftell(file);
 	rewind(file);
 
-	data = (unsigned char *) malloc(*fileSize + 1);
+	data = malloc(*fileSize + 1);
 	if ( ! data) {
 		printf("Could not allocate enough memory.\n");
 		return 0;
