@@ -138,7 +138,6 @@ void decrypt(unsigned char * state, char * key,
 
 	cipher(state, data + 10, dataLength - 10);
 
-	printf("%s\n", data + 10);
 	stringToFile((char *) data + 10, destPath);
 
 	free(data);
