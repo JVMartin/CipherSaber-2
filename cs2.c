@@ -2,24 +2,25 @@
 #include <stdio.h>
 #include <string.h>
 
-int checkInput(int argc, char ** argv);
+int checkCommand(int argc, char ** argv);
 
 int main(int argc, char ** argv)
 {
-	if ( ! checkInput(argc, argv)) {
+	if ( ! checkCommand(argc, argv)) {
 		printf("Usage:\n");
-		printf("	cs2 encrypt <input file> <output file>\n");
-		printf("	cs2 decrypt <input file> <output file>\n");
+		printf("	cs2 encrypt <password> <input file> <output file>\n");
+		printf("	cs2 decrypt <password> <input file> <output file>\n");
 	}
+
 	return 0;
 }
 
 /**
  * Check the formatting of the command call.
  */
-int checkInput(int argc, char ** argv)
+int checkCommand(int argc, char ** argv)
 {
-	if (argc != 4) {
+	if (argc != 5) {
 		return 0;
 	}
 
