@@ -69,14 +69,14 @@ void initState(unsigned char * state, unsigned char * key, int keyLength)
 	int i, j, n;
 
 	// Initialize the state array.
-	for (i = 0; i < 255; ++i) {
+	for (i = 0; i < 256; ++i) {
 		state[i] = i;
 	}
 
 	j =  0;
 
 	for (n = 0; n < ROUNDS; ++n) {
-		for (i = 0; i < 255; ++i) {
+		for (i = 0; i < 256; ++i) {
 			j += state[i];
 			j += key[i % keyLength];
 			j = j % 256;
@@ -100,26 +100,14 @@ void decrypt(unsigned char * state, char * key,
 	data = getFileContents(srcPath, &dataSize);
 	if ( ! data) return;
 	keyLength = strlen(key);
-	/*
-	for (i = 0; i < keyLength; ++i) {
-		printf("%d: %d\n", i, key[i]);
-	}
-	*/
-	appendedKey = malloc(keyLength + 11);
+
+	appendedKey = malloc(keyLength + 10);
 	memcpy(appendedKey, key, keyLength);
 	memcpy(appendedKey + keyLength, data, 10);
-	appendedKey[keyLength + 9] = '\0';
-	/*
-	printf("Key: %s\n", appendedKey);
-	for (i = 0; i < keyLength + 10; ++i) {
-		printf("%d: %d\n", i, appendedKey[i]);
-	}
-	*/
 
 	initState(state, appendedKey, keyLength + 10);
 
-	cipher(state, data, dataSize);
-	printf("%s\n", data);
+	cipher(state, data + 10, dataSize - 10);
 
 	free(data);
 	free(appendedKey);
