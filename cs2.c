@@ -10,6 +10,7 @@ void cipher(unsigned char * state, unsigned char * data, int length);
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
 unsigned char * fileToString(char * path, int * stringLength);
+int stringToFile(char * string, char * path);
 
 int main(int argc, char ** argv)
 {
@@ -138,13 +139,14 @@ void decrypt(unsigned char * state, char * key,
 	cipher(state, data + 10, dataLength - 10);
 
 	printf("%s\n", data + 10);
+	stringToFile(data + 10, destPath);
 
 	free(data);
 	free(appendedKey);
 }
 
 /**
- * Get the contents of a file into an array of chars.
+ * Read the contents of a file into a cstring.
  */
 unsigned char * fileToString(char * path, int * stringLength)
 {
@@ -173,4 +175,22 @@ unsigned char * fileToString(char * path, int * stringLength)
 	fread(data, *stringLength, 1, file);
 	fclose(file);
 	return data;
+}
+
+/**
+ * Place the contents of a cstring into a file.
+ */
+int stringToFile(char * string, char * path)
+{
+	FILE * file;
+
+	file = fopen(path, "w");
+	if ( ! file) {
+		printf("Could not create/open file: %s\n", path);
+		return 0;
+	}
+
+	fputs(string, file);
+	fclose(file);
+	return 1;
 }
