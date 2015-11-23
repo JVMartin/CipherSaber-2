@@ -148,11 +148,12 @@ unsigned char * getFileContents(char * path, int * fileSize)
 	*fileSize = ftell(file);
 	rewind(file);
 
-	data = malloc(*fileSize);
+	data = (unsigned char *) malloc(*fileSize + 1);
 	if ( ! data) {
 		printf("Could not allocate enough memory.\n");
 		return 0;
 	}
+	data[*fileSize] = 0;
 
 	fread(data, *fileSize, 1, file);
 	fclose(file);
