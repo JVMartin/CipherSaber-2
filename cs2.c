@@ -6,9 +6,9 @@
 
 int checkCommand(int argc, char ** argv);
 void initState(unsigned char * state, unsigned char * key, int keyLength);
+void cipher(unsigned char * state, unsigned char * data, int length);
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
-void cipher(unsigned char * state, unsigned char * data, int length);
 unsigned char * getFileContents(char * path, int * fileSize);
 
 int main(int argc, char ** argv)
@@ -62,12 +62,14 @@ int checkCommand(int argc, char ** argv)
 	return 1;
 }
 
+/**
+ * Initialize the state array.
+ */
 void initState(unsigned char * state, unsigned char * key, int keyLength)
 {
 	unsigned char c;
 	int i, j, n;
 
-	// Initialize the state array.
 	for (i = 0; i < 256; ++i) {
 		state[i] = i;
 	}
@@ -80,7 +82,7 @@ void initState(unsigned char * state, unsigned char * key, int keyLength)
 			j += key[i % keyLength];
 			j = j % 256;
 
-			// Swap the ith and jth elements of the state array.
+			// Swap the ith and jth elements.
 			c = state[i];
 			state[i] = state[j];
 			state[j] = c;
@@ -88,6 +90,33 @@ void initState(unsigned char * state, unsigned char * key, int keyLength)
 	}
 }
 
+/**
+ * Cipher some data.
+ */
+void cipher(unsigned char * state, unsigned char * data, int length)
+{
+	int i, j, k, n;
+	unsigned char c;
+
+	i = j = 0;
+
+	for (n = 0; n < length; ++n) {
+		i = (i + 1) % 256;
+		j = (j + state[i]) % 256;
+
+		// Swap the ith and jth elements.
+		c = state[i];
+		state[i] = state[j];
+		state[j] = c;
+
+		k = (state[i] + state[j]) % 256;
+		data[n] ^= state[k];
+	}
+}
+
+/**
+ * Decrypt a file.
+ */
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath)
 {
@@ -114,27 +143,9 @@ void decrypt(unsigned char * state, char * key,
 	free(appendedKey);
 }
 
-void cipher(unsigned char * state, unsigned char * data, int length)
-{
-	int i, j, k, n;
-	unsigned char c;
-
-	i = j = 0;
-
-	for (n = 0; n < length; ++n) {
-		i = (i + 1) % 256;
-		j = (j + state[i]) % 256;
-
-		// Swap the ith and jth elements of the state array.
-		c = state[i];
-		state[i] = state[j];
-		state[j] = c;
-
-		k = (state[i] + state[j]) % 256;
-		data[n] ^= state[k];
-	}
-}
-
+/**
+ * Get the contents of a file into an array of chars.
+ */
 unsigned char * getFileContents(char * path, int * fileSize)
 {
 	FILE * file;
