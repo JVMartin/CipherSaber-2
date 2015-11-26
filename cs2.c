@@ -85,9 +85,8 @@ void initState(unsigned char * state, unsigned char * key, int keyLength)
 
 	for (n = 0; n < ROUNDS; ++n) {
 		for (i = 0; i < 256; ++i) {
-			j += state[i];
-			j += key[i % keyLength];
-			j = j % 256;
+			j += state[i] + key[i % keyLength];
+			j %= 256;
 
 			// Swap the ith and jth elements.
 			c = state[i];
@@ -128,7 +127,6 @@ void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath)
 {
 	unsigned char * data;
-	unsigned char * appendedKey;
 	int keyLength;
 	int dataLength;
 
@@ -136,18 +134,17 @@ void decrypt(unsigned char * state, char * key,
 	if ( ! data) return;
 	keyLength = strlen(key);
 
-	appendedKey = malloc(keyLength + 10);
-	memcpy(appendedKey, key, keyLength);
-	memcpy(appendedKey + keyLength, data, 10);
+	// Append the IV from the file to the key.
+	memcpy(key + keyLength, data, 10);
 
-	initState(state, appendedKey, keyLength + 10);
+	initState(state, key, keyLength + 10);
 
 	cipher(state, data + 10, dataLength - 10);
 
+	// Write the decrypted string to the destination file.
 	stringToFile((char *) data + 10, destPath);
 
 	free(data);
-	free(appendedKey);
 }
 
 /**
