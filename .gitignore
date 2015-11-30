@@ -5,3 +5,5 @@
 !.gitignore
 !cs2.c
 !LICENSE
+!client.py
+!server.py
