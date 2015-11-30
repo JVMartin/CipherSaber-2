@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define ROUNDS 10
+#define ROUNDS 20
 
 int checkCommand(int argc, char ** argv);
 void initState(unsigned char * state, unsigned char * key, int keyLength);
