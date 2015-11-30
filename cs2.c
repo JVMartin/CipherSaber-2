@@ -43,6 +43,7 @@ int main(int argc, char ** argv)
 		decrypt(state, key, argv[3], argv[4]);
 	}
 	else {
+		encrypt(state, key, argv[3], argv[4]);
 	}
 
 	free(state);
@@ -140,7 +141,7 @@ void decrypt(unsigned char * state, char * key,
 	// Append the IV from the file to the key.
 	memcpy(key + keyLength, bytes, 10);
 
-	initState(state, key, keyLength + 10);
+	initState(state, (unsigned char *) key, keyLength + 10);
 
 	cipher(state, bytes + 10, dataLength - 10);
 
@@ -157,6 +158,7 @@ void encrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath)
 {
 	unsigned char * bytes;
+	unsigned char * bytesPrepended;
 	unsigned char random[10];
 	int keyLength;
 	int dataLength;
@@ -171,20 +173,26 @@ void encrypt(unsigned char * state, char * key,
 		printf("Could not access /dev/urandom.\n");
 		return;
 	}
-	fread(random, 10, 1, randomFile);
+	fread(&random, 1, 10, randomFile);
 	fclose(randomFile);
 
 	// Append the IV from random to the key.
 	memcpy(key + keyLength, random, 10);
 
-	initState(state, key, keyLength + 10);
+	initState(state, (unsigned char *) key, keyLength + 10);
 
 	cipher(state, bytes, dataLength);
 
-	// Write the encrypted string to the destination file.
-	bytesToFile(bytes, dataLength, destPath);
+	// Prepend random to the encrypted bytes.
+	bytesPrepended = malloc(dataLength + 10);
+	memcpy(bytesPrepended, random, 10);
+	memcpy(bytesPrepended + 10, bytes, dataLength);
+
+	// Write the prepended, encrypted bytes to the destination file.
+	bytesToFile(bytesPrepended, dataLength + 10, destPath);
 
 	free(bytes);
+	free(bytesPrepended);
 }
 
 /**
