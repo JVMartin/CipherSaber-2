@@ -36,4 +36,4 @@ while True:
 		message = decryptedFile.read()
 		print("Message: " + message)
 	clientsocket.close()
-	os.remove("encrypted")
+	os.remove("decrypted")
