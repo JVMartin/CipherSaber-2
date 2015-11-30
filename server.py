@@ -6,15 +6,20 @@
 
 import socket
 
+host = 'localhost'
+port = 6283
+
 print("Initializing server.")
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-serversocket.bind(("localhost", 6283))
+serversocket.bind((host, port))
 serversocket.listen(5)
 
-print("Listening on port 6283.")
+print("Listening on port " + str(port) + "...")
 
 while True:
 	(clientsocket, address) = serversocket.accept()
-	ct = client_thread(clientsocket)
-	ct.run()
+	print("Receiving a connection from %s" + str(address))
+	string = clientsocket.recv(1024).decode()
+	print("Message: " + string)
+	clientsocket.close()

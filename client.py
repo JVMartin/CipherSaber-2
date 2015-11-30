@@ -7,5 +7,10 @@
 import socket
 
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("localhost", 80))
+target_host = "localhost"
+target_port = 6283
+
+target = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+target.connect((target_host, target_port))
+target.send("Hello there.".encode())
+target.close()
