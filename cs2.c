@@ -15,8 +15,11 @@ void initState(unsigned char * state, unsigned char * key, int keyLength);
 void cipher(unsigned char * state, unsigned char * data, int length);
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath);
-unsigned char * fileToString(char * path, int * stringLength);
+void encrypt(unsigned char * state, char * key,
+	char * srcPath, char * destPath);
+unsigned char * fileToBytes(char * path, int * stringLength);
 int stringToFile(char * string, char * path);
+int bytesToFile(unsigned char * bytes, int length, char * path);
 
 int main(int argc, char ** argv)
 {
@@ -126,31 +129,68 @@ void cipher(unsigned char * state, unsigned char * data, int length)
 void decrypt(unsigned char * state, char * key,
 	char * srcPath, char * destPath)
 {
-	unsigned char * data;
+	unsigned char * bytes;
 	int keyLength;
 	int dataLength;
 
-	data = fileToString(srcPath, &dataLength);
-	if ( ! data) return;
+	bytes = fileToBytes(srcPath, &dataLength);
+	if ( ! bytes) return;
 	keyLength = strlen(key);
 
 	// Append the IV from the file to the key.
-	memcpy(key + keyLength, data, 10);
+	memcpy(key + keyLength, bytes, 10);
 
 	initState(state, key, keyLength + 10);
 
-	cipher(state, data + 10, dataLength - 10);
+	cipher(state, bytes + 10, dataLength - 10);
 
 	// Write the decrypted string to the destination file.
-	stringToFile((char *) data + 10, destPath);
+	stringToFile((char *) bytes + 10, destPath);
 
-	free(data);
+	free(bytes);
+}
+
+/**
+ * Encrypt a file.
+ */
+void encrypt(unsigned char * state, char * key,
+	char * srcPath, char * destPath)
+{
+	unsigned char * bytes;
+	unsigned char random[10];
+	int keyLength;
+	int dataLength;
+	FILE * randomFile;
+
+	bytes = fileToBytes(srcPath, &dataLength);
+	if ( ! bytes) return;
+	keyLength = strlen(key);
+
+	randomFile = fopen("/dev/urandom", "r");
+	if ( ! randomFile) {
+		printf("Could not access /dev/urandom.\n");
+		return;
+	}
+	fread(random, 10, 1, randomFile);
+	fclose(randomFile);
+
+	// Append the IV from random to the key.
+	memcpy(key + keyLength, random, 10);
+
+	initState(state, key, keyLength + 10);
+
+	cipher(state, bytes, dataLength);
+
+	// Write the encrypted string to the destination file.
+	bytesToFile(bytes, dataLength, destPath);
+
+	free(bytes);
 }
 
 /**
  * Read the contents of a file into a cstring.
  */
-unsigned char * fileToString(char * path, int * stringLength)
+unsigned char * fileToBytes(char * path, int * stringLength)
 {
 	FILE * file;
 	unsigned char * data;
@@ -180,7 +220,7 @@ unsigned char * fileToString(char * path, int * stringLength)
 }
 
 /**
- * Place the contents of a cstring into a file.
+ * Write the contents of a cstring to a file.
  */
 int stringToFile(char * string, char * path)
 {
@@ -197,3 +237,22 @@ int stringToFile(char * string, char * path)
 	fclose(file);
 	return 1;
 }
+
+/**
+ * Write the provided bytes to a file.
+ */
+int bytesToFile(unsigned char * bytes, int length, char * path)
+{
+	FILE * file;
+
+	file = fopen(path, "wb");
+	if ( ! file) {
+		printf("Could not create/open file: %s\n", path);
+		return 0;
+	}
+
+	fwrite(bytes, 1, length, file);
+	fclose(file);
+	return 1;
+}
+
