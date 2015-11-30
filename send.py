@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2015 Jacob Martin
+"""
+Copyright (c) 2015 Jacob Martin
 
-# A client for sending TauNet Messages.
+A command for sending TauNet Messages.
+"""
 
 import sys
 import os
 import socket
 from subprocess import call
 
-target_host = "localhost"
+target_host = "junkgrave.com"
 target_port = 6283
 key         = "password"
 

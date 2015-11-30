@@ -1,7 +1,8 @@
 /**
  * Copyright (c) 2015 Jacob Martin
  *
- * CipherSaber-2 file encryption/decryption.
+ * CipherSaber-2 file encryption/decryption, designed to be ran from the
+ * command line with a key, source file path, and destination file path.
  */
 
 #include <stdlib.h>
@@ -10,6 +11,7 @@
 
 #define ROUNDS 20
 
+// See function implementations for clarifying comments.
 int checkCommand(int argc, char ** argv);
 void initState(unsigned char * state, unsigned char * key, int keyLength);
 void cipher(unsigned char * state, unsigned char * data, int length);

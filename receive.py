@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2015 Jacob Martin
+"""
+Copyright (c) 2015 Jacob Martin
 
-# A server for receiving TauNet Messages.
+A command for receiving TauNet Messages.
+"""
 
 import socket
 from subprocess import call
