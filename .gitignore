@@ -7,5 +7,5 @@
 !LICENSE
 !send.py
 !receive.py
-!clients.json
+!clienttable.py
 !README.md

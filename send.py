@@ -10,25 +10,25 @@ import sys
 import os
 import socket
 from subprocess import call
-
-target_host = "junkgrave.com"
-target_port = 6283
-key         = "password"
+from clienttable import ClientTable
 
 args = sys.argv
 
 # Helpful usage hints.
-if len(args) != 2:
+if len(args) != 3:
 	print("usage:")
-	print("\tpython3 client.py <message>\n")
+	print("\tpython3 client.py <username> <message>\n")
 	exit()
 
-message = args[1]
+clientTable = ClientTable()
+target_host = clientTable.clients[args[1]]
+target_port = 6283
+message     = args[2]
 
 with open("message", "w") as messageFile:
 	messageFile.write(message)
 
-call(["./cs2", "encrypt", key, "message", "encrypted"])
+call(["./cs2", "encrypt", clientTable.key, "message", "encrypted"])
 os.remove("message")
 
 target = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
