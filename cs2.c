@@ -262,4 +262,3 @@ int bytesToFile(unsigned char * bytes, int length, char * path)
 	fclose(file);
 	return 1;
 }
-
