@@ -7,6 +7,7 @@ A command for receiving TauNet Messages.
 """
 
 import socket
+import os
 from subprocess import call
 from clienttable import ClientTable
 
@@ -29,8 +30,10 @@ while True:
 		receivedFile.write(clientsocket.recv(1024))
 
 	call(["./cs2", "decrypt", key, "received", "decrypted"])
+	os.remove("received")
 
 	with open("decrypted", "r") as decryptedFile:
 		message = decryptedFile.read()
 		print("Message: " + message)
 	clientsocket.close()
+	os.remove("encrypted")
