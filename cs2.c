@@ -241,7 +241,6 @@ int stringToFile(char * string, char * path)
 	}
 
 	fputs(string, file);
-	fputs("\n", file);
 	fclose(file);
 	return 1;
 }
