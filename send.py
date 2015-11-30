@@ -17,11 +17,16 @@ args = sys.argv
 # Helpful usage hints.
 if len(args) != 3:
 	print("usage:")
-	print("\tpython3 client.py <username> <message>\n")
+	print("\tpython3 client.py <username> <message>")
 	exit()
 
 clientTable = ClientTable()
-target_host = clientTable.clients[args[1]]
+try:
+	target_host = clientTable.clients[args[1]]
+except KeyError:
+	print("That client does not exist in the table.")
+	exit()
+
 target_port = 6283
 message     = args[2]
 
