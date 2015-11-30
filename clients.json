@@ -1,0 +1,6 @@
+{
+	"key": "password",
+	"clients": {
+		"john": "minion.mindtax.net"
+	}
+}
