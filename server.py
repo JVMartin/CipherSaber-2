@@ -5,9 +5,11 @@
 # A server for receiving TauNet Messages.
 
 import socket
+from subprocess import call
 
-host = 'localhost'
+host = socket.gethostname()
 port = 6283
+key  = "password"
 
 print("Initializing server.")
 
@@ -20,6 +22,12 @@ print("Listening on port " + str(port) + "...")
 while True:
 	(clientsocket, address) = serversocket.accept()
 	print("Receiving a connection from %s" + str(address))
-	string = clientsocket.recv(1024).decode()
-	print("Message: " + string)
+	with open("received", "wb") as receivedFile:
+		receivedFile.write(clientsocket.recv(1024))
+
+	call(["./cs2", "decrypt", key, "received", "decrypted"])
+
+	with open("decrypted", "r") as decryptedFile:
+		message = decryptedFile.read()
+		print("Message: " + message)
 	clientsocket.close()
