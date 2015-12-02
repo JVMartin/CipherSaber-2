@@ -56,7 +56,7 @@ while True:
 			message       = "".join(lines[3:])
 
 			display   = time.strftime("%x %X") + " "
-			display  += from_username + ": " + message
+			display  += "<" + from_username + "> " + message
 			print(display)
 
 	clientsocket.close()
