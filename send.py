@@ -31,14 +31,15 @@ except KeyError:
 	print("That client does not exist in the table.")
 	exit()
 
+# Construct the full message complete with headers.
+full_message  = "version: " + version + "\r\n"
+full_message += "from: " + client_table.username + "\r\n"
+full_message += "to: " + to_username + "\r\n\r\n"
+full_message += message
+
 # Write the message to a file.
 with open("message", "w") as messageFile:
-	messageFile.write("""\
-version: %s
-from: %s
-to: %s
-
-%s""" % (version, client_table.username, to_username, message))
+	messageFile.write(full_message)
 
 # Encrypt the message file then delete the original file.
 call(["./cs2", "encrypt", client_table.key, "message", "encrypted"])
