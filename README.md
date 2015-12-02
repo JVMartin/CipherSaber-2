@@ -19,8 +19,8 @@ Install the client table by first copying the example:
 cp clients.json.example clients.json
 ```
 
-...and then edit the table to add your key and client list while following
-the given format.
+...and then edit `clients.json` to add your key and client list while following
+the provided format.
 
 You are now ready to use the application.
 
