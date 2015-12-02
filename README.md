@@ -40,5 +40,5 @@ To *send* an outgoing message, use the command:
 
 # Examples:
 ./send.py bart "Hey, how are you?"
-./send.py jacob "Okay."
+./send.py jacob "I'll be there in 10 minutes."
 ```
