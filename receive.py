@@ -37,6 +37,8 @@ while True:
 	with open("decrypted", "r") as decryptedFile:
 		full_message = decryptedFile.read()
 		lines        = full_message.split("\n")
+
+		# Check if the message is malformed or noncompliant.
 		if (
 				len(lines) < 4 or
 				lines[0] != "version: 0.2" or
@@ -45,8 +47,9 @@ while True:
 		   ):
 			print("Received malformed message from " + str(from_address))
 			print("Malformed message:")
-			print(len(lines))
 			print(full_message)
+
+		# The message is good.
 		else:
 			# Display the message.
 			from_username = lines[1][6:]
