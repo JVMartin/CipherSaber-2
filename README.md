@@ -26,3 +26,19 @@ You are now ready to use the application.
 
 Usage
 -----
+To *receive* incoming messages, start the receive command using:
+```bash
+./receive.py
+```
+
+The command will continue to run and will display any messages it receives
+as it runs.
+
+To *send* an outgoing message, use the command:
+```bash
+./send.py <username> <message>
+
+# Examples:
+./send.py bart "Hey, how are you?"
+./send.py jacob "Okay."
+```
