@@ -13,8 +13,6 @@ from subprocess import call
 from taunet import *
 
 host = socket.gethostname()
-port = 6283
-key  = client_table.key
 
 # Listen on the set hostname and port.
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,7 +28,7 @@ while True:
 		receivedFile.write(clientsocket.recv(1024))
 
 	# Decrypt the file and delete the original.
-	call(["./cs2", "decrypt", key, "received", "decrypted"])
+	call(["./cs2", "decrypt", client_table.key, "received", "decrypted"])
 	os.remove("received")
 
 	# Open the decrypted file and parse it.

@@ -22,7 +22,6 @@ if len(args) != 3:
 
 to_username = args[1]
 message     = args[2]
-target_port = 6283
 
 # Fetch the target host from the client table using the username argument.
 try:
@@ -47,7 +46,7 @@ os.remove("message")
 
 # Connect to the target.
 target = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-target.connect((target_host, target_port))
+target.connect((target_host, port))
 
 # Send the encrypted file.
 with open("encrypted", "rb") as encryptedFile:
