@@ -20,6 +20,7 @@ if len(args) != 3:
 	print("\tpython3 client.py <username> <message>")
 	exit()
 
+# Fetch the target host from the client table using the username argument.
 client_table = ClientTable()
 try:
 	target_host = client_table.clients[args[1]]
@@ -30,6 +31,9 @@ except KeyError:
 target_port = 6283
 message     = args[2]
 
+# Construct the message.
+
+# Write the message to a file.
 with open("message", "w") as messageFile:
 	messageFile.write(message)
 
