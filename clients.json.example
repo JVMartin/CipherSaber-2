@@ -1,5 +1,6 @@
 {
 	"key": "xxxxxxxxxxxxxx",
+	"username": "myusername",
 	"clients": {
 		"bob": "example.com",
 		"sally": "123.123.123.123"
