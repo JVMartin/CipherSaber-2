@@ -9,9 +9,7 @@ A command for receiving TauNet Messages.
 import socket
 import os
 from subprocess import call
-from clienttable import ClientTable
-
-client_table = ClientTable()
+from taunet import *
 
 host = socket.gethostname()
 port = 6283

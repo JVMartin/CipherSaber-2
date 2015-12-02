@@ -13,7 +13,8 @@ class ClientTable:
 		try:
 			with open("clients.json") as json_file:
 				clientTable = json.load(json_file)
-			self.key     = clientTable["key"]
-			self.clients = clientTable["clients"]
+			self.key      = clientTable["key"]
+			self.username = clientTable["username"]
+			self.clients  = clientTable["clients"]
 		except FileNotFoundError:
 			print("The client table file is missing.")

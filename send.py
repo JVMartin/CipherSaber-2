@@ -10,7 +10,7 @@ import sys
 import os
 import socket
 from subprocess import call
-from clienttable import ClientTable
+from taunet import *
 
 args = sys.argv
 
@@ -20,10 +20,11 @@ if len(args) != 3:
 	print("\tpython3 client.py <username> <message>")
 	exit()
 
+to_username = args[1]
+
 # Fetch the target host from the client table using the username argument.
-client_table = ClientTable()
 try:
-	target_host = client_table.clients[args[1]]
+	target_host = client_table.clients[to_username]
 except KeyError:
 	print("That client does not exist in the table.")
 	exit()
@@ -35,7 +36,12 @@ message     = args[2]
 
 # Write the message to a file.
 with open("message", "w") as messageFile:
-	messageFile.write(message)
+	messageFile.write("""\
+version: %s
+from: %s
+to: %s
+
+%s""" % (version, client_table.username, to_username, message))
 
 call(["./cs2", "encrypt", client_table.key, "message", "encrypted"])
 os.remove("message")
