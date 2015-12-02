@@ -15,6 +15,7 @@ host = socket.gethostname()
 port = 6283
 key  = client_table.key
 
+# Listen on the set hostname and port.
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.bind((host, port))
 serversocket.listen(5)

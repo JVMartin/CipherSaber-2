@@ -21,6 +21,8 @@ if len(args) != 3:
 	exit()
 
 to_username = args[1]
+message     = args[2]
+target_port = 6283
 
 # Fetch the target host from the client table using the username argument.
 try:
@@ -28,11 +30,6 @@ try:
 except KeyError:
 	print("That client does not exist in the table.")
 	exit()
-
-target_port = 6283
-message     = args[2]
-
-# Construct the message.
 
 # Write the message to a file.
 with open("message", "w") as messageFile:
@@ -43,14 +40,18 @@ to: %s
 
 %s""" % (version, client_table.username, to_username, message))
 
+# Encrypt the message file then delete the original file.
 call(["./cs2", "encrypt", client_table.key, "message", "encrypted"])
 os.remove("message")
 
+# Connect to the target.
 target = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 target.connect((target_host, target_port))
 
+# Send the encrypted file.
 with open("encrypted", "rb") as encryptedFile:
 	target.send(encryptedFile.read(1024))
 
+# Close the connection and delete the encrypted file.
 target.close()
 os.remove("encrypted")
