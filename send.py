@@ -20,9 +20,9 @@ if len(args) != 3:
 	print("\tpython3 client.py <username> <message>")
 	exit()
 
-clientTable = ClientTable()
+client_table = ClientTable()
 try:
-	target_host = clientTable.clients[args[1]]
+	target_host = client_table.clients[args[1]]
 except KeyError:
 	print("That client does not exist in the table.")
 	exit()
@@ -33,7 +33,7 @@ message     = args[2]
 with open("message", "w") as messageFile:
 	messageFile.write(message)
 
-call(["./cs2", "encrypt", clientTable.key, "message", "encrypted"])
+call(["./cs2", "encrypt", client_table.key, "message", "encrypted"])
 os.remove("message")
 
 target = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
