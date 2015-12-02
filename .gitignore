@@ -1,11 +1,4 @@
-/*
+/__pycache__
+/.idea
 
-!docs/
-
-!.gitignore
-!cs2.c
-!LICENSE
-!send.py
-!receive.py
-!clienttable.py
-!README.md
+cs2
