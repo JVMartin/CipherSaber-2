@@ -8,6 +8,7 @@ A command for receiving TauNet Messages.
 
 import socket
 import os
+import time
 from subprocess import call
 from taunet import *
 
@@ -23,16 +24,37 @@ serversocket.listen(5)
 print("Listening on " + host + ":" + str(port) + "...")
 
 while True:
-	(clientsocket, address) = serversocket.accept()
-	print("Receiving a connection from %s" + str(address))
+	(clientsocket, from_address) = serversocket.accept()
 	with open("received", "wb") as receivedFile:
+		# Write the raw received bytes to a file.
 		receivedFile.write(clientsocket.recv(1024))
 
+	# Decrypt the file and delete the original.
 	call(["./cs2", "decrypt", key, "received", "decrypted"])
 	os.remove("received")
 
+	# Open the decrypted file and parse it.
 	with open("decrypted", "r") as decryptedFile:
-		message = decryptedFile.read()
-		print("Message: " + message)
+		full_message = decryptedFile.read()
+		lines        = full_message.split("\n")
+		if (
+				len(lines) < 4 or
+				lines[0] != "version: 0.2" or
+				not lines[1].startswith("from: ") or
+				not lines[2].startswith("to: ")
+		   ):
+			print("Received malformed message from " + str(from_address))
+			print("Malformed message:")
+			print(len(lines))
+			print(full_message)
+		else:
+			# Display the message.
+			from_username = lines[1][6:]
+			message       = "".join(lines[3:])
+
+			display   = time.strftime("%x %X") + " "
+			display  += from_username + ": " + message
+			print(display)
+
 	clientsocket.close()
 	os.remove("decrypted")
