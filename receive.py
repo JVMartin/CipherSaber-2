@@ -42,7 +42,7 @@ while True:
 				lines[0] != "version: 0.2" or
 				not lines[1].startswith("from: ") or
 				not lines[2].startswith("to: ") or
-				len(lines[3])
+				len(lines[3]) # The fourth line must be empty
 		   ):
 			print("Received malformed message from " + str(from_address))
 			print("Malformed message:")
