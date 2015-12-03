@@ -41,17 +41,17 @@ while True:
 				len(lines) < 4 or
 				lines[0] != "version: 0.2" or
 				not lines[1].startswith("from: ") or
-				not lines[2].startswith("to: ")
+				not lines[2].startswith("to: ") or
+				len(lines[3])
 		   ):
 			print("Received malformed message from " + str(from_address))
 			print("Malformed message:")
 			print(full_message)
 
-		# The message is good.
+		# The message is good, display it.
 		else:
-			# Display the message.
 			from_username = lines[1][6:]
-			message       = "".join(lines[3:])
+			message       = "\n".join(lines[4:])
 
 			display   = time.strftime("%x %X") + " "
 			display  += "<" + from_username + "> " + message
