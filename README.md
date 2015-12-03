@@ -7,6 +7,9 @@ from other TauNet client applications.
 
 Installation
 ------------
+First, ensure you have `gcc` installed and that `/dev/urandom` outputs
+random bytes.
+
 Compile the provided CipherSaber-2 encryption tool using:
 ```bash
 gcc cs2.c -o cs2
