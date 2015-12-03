@@ -32,7 +32,7 @@ To *receive* incoming messages, start the receive command using:
 ```
 
 The command will continue to run and will display any messages it receives
-as it runs.
+as soon as it receives them.
 
 To *send* an outgoing message, use the command:
 ```bash
