@@ -27,6 +27,12 @@ while True:
 		# Write the raw received bytes to a file.
 		receivedFile.write(clientsocket.recv(1024))
 
+	# Discard if the received message is 0 bytes.
+	bytes = os.path.getsize("received")
+	if bytes < 50:
+		os.remove("received")
+		continue
+
 	# Decrypt the file and delete the original.
 	call(["./cs2", "decrypt", client_table.key, "received", "decrypted"])
 	os.remove("received")
