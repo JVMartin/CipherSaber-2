@@ -18,3 +18,4 @@ class ClientTable:
 			self.clients  = clientTable["clients"]
 		except FileNotFoundError:
 			print("The client table file is missing.")
+			exit()
