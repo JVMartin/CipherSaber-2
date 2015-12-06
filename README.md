@@ -1,5 +1,5 @@
-TauNet Client Application
-=========================
+TauNet Client Application v1.0
+==============================
 Copyright &copy; 2015 Jacob Martin
 
 The TauNet client application can be used to send messages to and receive messages
