@@ -16,6 +16,7 @@ host = socket.gethostname()
 
 # Listen on the set hostname and port.
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 serversocket.bind((host, port))
 serversocket.listen(5)
 
