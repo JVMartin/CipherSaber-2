@@ -28,9 +28,9 @@ while True:
 		# Write the raw received bytes to a file.
 		receivedFile.write(clientsocket.recv(1024))
 
-	# Discard if the received message is 0 bytes.
+	# Discard if the received message is 0 bytes and carry on listening.
 	bytes = os.path.getsize("received")
-	if bytes < 50:
+	if bytes == 0:
 		os.remove("received")
 		continue
 
