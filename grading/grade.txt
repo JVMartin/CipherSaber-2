@@ -1,4 +1,8 @@
-[In Progress]
-SRS needs glossary.
-Good Git history.
-README is well-written.
+Jacob Martin
+96 A
+
+Hao: SRS needs glossary.  Good Git history.  README is
+well-written.
+
+Bart: No Makefile. Good PER. Good code. Decision to write
+part in C and part in Python is fine if a bit odd. Good job.
