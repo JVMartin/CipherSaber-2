@@ -1,3 +1,4 @@
+[In Progress]
 SRS needs glossary.
 Good Git history.
 README is well-written.
