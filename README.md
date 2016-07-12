@@ -1,3 +1,11 @@
+CipherSaber-2 in C
+==================
+Copyright &copy; 2015 Jacob Martin
+
+See [cs2.c](https://github.com/JVMartin/CipherSaber-2/blob/master/cs2.c) for file encryption/decryption using [CipherSaber-2](http://ciphersaber.gurus.org/).
+
+Feel free to modify this implentation to your heart's content.  
+
 TauNet Client Application v1.0
 ==============================
 Copyright &copy; 2015 Jacob Martin
